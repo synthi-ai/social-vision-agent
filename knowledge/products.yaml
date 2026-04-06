@@ -1,0 +1,86 @@
+# knowledge/products.yaml
+# Catalogue produits – mis à jour manuellement.
+# Utilisé par l'agent Product Expert pour enrichir les posts.
+
+products:
+  - id: orch-v2
+    name: "Orchestrator v2"
+    status: "GA – Disponible"
+    category: "MLOps / Agent orchestration"
+    short_description: >
+      Orchestre n'importe quel workflow multi-modèles avec fallback,
+      auto-scaling et observabilité intégrée.
+    key_features:
+      - "Routing intelligent (Llama 4 → Grok → Gemini)"
+      - "Checkpoint & resume natif"
+      - "Exécution local-first optionnelle"
+      - "Prometheus + OpenTelemetry natif"
+    differentiators:
+      - "3× plus rapide que les solutions cloud-only"
+      - "Coût réduit de 70% grâce au local-first"
+      - "Zero vendor lock-in"
+    website_url: "https://votre-domaine.com/orchestrator"
+    demo_url: "https://www.youtube.com/watch?v=xxxx"
+    target_audience:
+      - "Startups IA"
+      - "Scale-ups"
+      - "Équipes R&D"
+    pricing: "Open-core : gratuit + plans pro"
+    use_cases:
+      - "Pipeline de RAG multi-sources"
+      - "Agents autonomes avec fallback"
+      - "Batch processing de documents"
+
+  - id: studio-agents
+    name: "Agent Studio"
+    status: "Beta publique"
+    category: "Low-code agents"
+    short_description: >
+      Créez, testez et déployez des agents multi-outils en drag-and-drop
+      + code Python optionnel.
+    key_features:
+      - "Intégration native LangGraph & CrewAI"
+      - "Preview live avec Llama 4 local"
+      - "Export vers Docker / Kubernetes"
+      - "Marketplace de composants communautaires"
+    differentiators:
+      - "Du prototype au prod en 1 journée"
+      - "Pas besoin d'être ML engineer"
+      - "Replay et debug visuel des exécutions"
+    website_url: "https://votre-domaine.com/studio"
+    target_audience:
+      - "Product managers"
+      - "Devs full-stack"
+      - "Consultants IA"
+    pricing: "Freemium"
+    use_cases:
+      - "Chatbot support client intelligent"
+      - "Agent de recherche interne"
+      - "Automatisation de workflows métier"
+
+  - id: obs-realtime
+    name: "AI Observatory"
+    status: "Early Access"
+    category: "Observabilité IA"
+    short_description: >
+      Dashboard temps-réel pour monitorer coûts, latence, qualité et
+      dérives de vos systèmes IA en production.
+    key_features:
+      - "Traces distribuées (OpenTelemetry natif)"
+      - "Alertes sur dérive de qualité"
+      - "Calcul automatique coût/requête"
+      - "Comparaison A/B de modèles"
+    differentiators:
+      - "Spécialisé IA (pas un Datadog générique)"
+      - "Self-hosted possible"
+      - "SDK Python en 3 lignes de code"
+    website_url: "https://votre-domaine.com/observatory"
+    target_audience:
+      - "MLOps engineers"
+      - "Platform teams"
+      - "CTOs"
+    pricing: "Self-hosted gratuit, cloud managé payant"
+    use_cases:
+      - "Monitoring de chatbots en production"
+      - "Audit de coûts LLM"
+      - "Détection de hallucinations"

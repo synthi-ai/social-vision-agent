@@ -1,0 +1,95 @@
+# config/weekly_brief.yaml
+# ============================================================
+# Weekly content brief — update this file every week.
+# The pipeline reads this to know what to produce.
+# ============================================================
+
+# Week identifier (auto-detected if omitted)
+# week: "2026-W13"
+
+# ── Global settings ──────────────────────────────────────────
+platforms:
+  - linkedin
+  - x
+  - tiktok
+  - facebook
+
+# Default posts per platform per product (overridable per product)
+default_posts_per_platform: 2
+
+# ── Products / campaigns to promote this week ────────────────
+campaigns:
+  - product_id: orch-v2
+    name: "Orchestrator v2"
+    priority: high
+    posts_per_platform: 2
+    themes:
+      - product
+      - education
+    key_messages:
+      - "3x faster than cloud-only solutions"
+      - "Zero vendor lock-in"
+    image_urls:
+      linkedin: "https://cdn.example.com/images/orch-v2/linkedin_banner.png"
+      x: "https://cdn.example.com/images/orch-v2/x_card.png"
+      tiktok: "https://cdn.example.com/images/orch-v2/tiktok_cover.png"
+      facebook: "https://cdn.example.com/images/orch-v2/fb_post.png"
+
+  - product_id: studio-agents
+    name: "Agent Studio"
+    priority: medium
+    posts_per_platform: 1
+    themes:
+      - product
+      - engagement
+    key_messages:
+      - "From prototype to production in 1 day"
+      - "No ML engineering degree required"
+    image_urls:
+      linkedin: "https://cdn.example.com/images/studio/linkedin_demo.png"
+      x: "https://cdn.example.com/images/studio/x_thread_header.png"
+      tiktok: "https://cdn.example.com/images/studio/tiktok_thumbnail.png"
+      facebook: "https://cdn.example.com/images/studio/fb_carousel_1.png"
+
+  - product_id: obs-realtime
+    name: "AI Observatory"
+    priority: low
+    posts_per_platform: 1
+    themes:
+      - vision
+      - education
+    key_messages:
+      - "Know your AI costs in real-time"
+      - "Detect hallucinations before your users do"
+    image_urls:
+      linkedin: "https://cdn.example.com/images/obs/linkedin_dashboard.png"
+      x: "https://cdn.example.com/images/obs/x_screenshot.png"
+
+# ── Vision / thought-leadership posts (not tied to a product) ─
+vision_posts:
+  posts_per_platform: 1
+  themes:
+    - vision
+    - engagement
+  topics:
+    - "Why local-first AI is the future"
+    - "Multi-model strategy: stop putting all eggs in one basket"
+    - "The real cost of AI in production"
+  image_urls:
+    linkedin: "https://cdn.example.com/images/vision/linkedin_thought.png"
+    x: "https://cdn.example.com/images/vision/x_quote.png"
+
+# ── Web research directives (agents will search for these) ───
+research_topics:
+  - "latest LangGraph features 2026"
+  - "AI agent frameworks comparison march 2026"
+  - "social media trends tech companies 2026"
+  - "developer community engagement best practices"
+
+# ── Schedule overrides (optional) ────────────────────────────
+# schedule:
+#   monday: [linkedin, x]
+#   tuesday: [tiktok, facebook]
+#   wednesday: [linkedin, x]
+#   thursday: [tiktok, facebook]
+#   friday: [linkedin, x, tiktok, facebook]

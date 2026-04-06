@@ -1,11 +1,25 @@
-# Test your FastAPI endpoints
+# Social Vision Agents — API Test Requests
+# Use with JetBrains HTTP Client or VSCode REST Client
 
+### Health check
 GET http://127.0.0.1:8000/
 Accept: application/json
 
-###
-
-GET http://127.0.0.1:8000/hello/User
+### Trigger weekly content generation
+POST http://127.0.0.1:8000/run
 Accept: application/json
 
-###
+### Trigger for a specific week
+POST http://127.0.0.1:8000/run?week=2026-W13
+Accept: application/json
+
+### Check status of a weekly run
+GET http://127.0.0.1:8000/status/2026-W13
+Accept: application/json
+
+### Approve all posts (resume graph after review)
+POST http://127.0.0.1:8000/approve/2026-W13
+Content-Type: application/json
+Accept: application/json
+
+{}

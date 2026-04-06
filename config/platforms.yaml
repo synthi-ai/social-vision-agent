@@ -1,0 +1,95 @@
+# config/platforms.yaml
+# Règles et bonnes pratiques par plateforme – Mars 2026
+# Utilisé par l'agent Optimizer pour adapter chaque post.
+
+linkedin:
+  max_length: 3000
+  optimal_length: "1300-1800 caractères"
+  formats_prioritaires:
+    - carousel
+    - single_image
+    - document
+    - video
+  hashtags_max: 5
+  cta_exemples:
+    - "Qu'en pensez-vous ? Dites-le en commentaire"
+    - "Partagez si vous êtes d'accord"
+    - "Taguez un collègue qui devrait voir ça"
+    - "Lien en commentaire"
+  best_posting_times:
+    - "mardi 8h-10h"
+    - "mercredi 9h"
+    - "jeudi 8h-11h"
+  ton: "professionnel mais accessible, thought leadership"
+  specifites:
+    - "Pas de liens dans le corps du post (algorithme pénalise)"
+    - "Première ligne = hook puissant (visible avant 'voir plus')"
+    - "Espaces entre paragraphes pour lisibilité"
+    - "Emojis parcimoniés (1-3 max)"
+
+x:
+  max_length: 280
+  thread_recommended_after: 180
+  formats_prioritaires:
+    - text_plus_image
+    - thread
+    - poll
+  hashtags_max: 3
+  cta_exemples:
+    - "RT si tu es d'accord"
+    - "Thread complet ci-dessous"
+    - "Qu'est-ce que tu en penses ?"
+  best_posting_times:
+    - "lundi-vendredi 9h-12h"
+    - "18h-20h"
+  ton: "direct, percutant, tech-savvy"
+  specifites:
+    - "Premier tweet = hook viral"
+    - "Threads : max 8-10 tweets, chacun auto-suffisant"
+    - "Mentions et réponses aux influenceurs tech"
+    - "Alt-text obligatoire sur les images"
+
+tiktok:
+  max_caption: 2200
+  optimal_caption: "100-150 caractères"
+  formats_prioritaires:
+    - reel_15_60s
+    - stitch
+    - duet
+  hashtags_max: 8
+  cta_exemples:
+    - "Duet ça !"
+    - "Tu penses quoi ? Commente"
+    - "Sauvegarde pour plus tard"
+    - "Follow pour plus de tips tech"
+  best_posting_times:
+    - "mardi-jeudi 18h-21h"
+  ton: "décontracté, éducatif, storytelling rapide"
+  specifites:
+    - "Hook dans les 3 premières secondes"
+    - "Sous-titres toujours (80% regardent sans son)"
+    - "Trending sounds très importants"
+    - "Format vertical 9:16 obligatoire"
+
+facebook:
+  max_length: 63206
+  optimal_length: "40-80 mots"
+  formats_prioritaires:
+    - reel
+    - single_image
+    - album
+    - live
+  hashtags_max: 5
+  cta_exemples:
+    - "Partagez si vous êtes d'accord"
+    - "Dites-nous en commentaire"
+    - "Identifiez un ami"
+  best_posting_times:
+    - "mercredi 13h-15h"
+    - "vendredi 9h-11h"
+  ton: "communautaire, accessible, storytelling"
+  specifites:
+    - "Reels favorisés par l'algorithme 2026"
+    - "Questions ouvertes = plus d'engagement"
+    - "Images natives > liens externes"
+    - "Groupes Facebook = distribution organique gratuite"
