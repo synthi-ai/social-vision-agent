@@ -15,9 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 class LLMConfig(BaseModel):
     """Primary LLM + fallback configuration."""
 
-    provider: Literal["ollama", "groq", "gemini"] = "ollama"
+    provider: Literal["ollama", "groq", "gemini", "xai"] = "ollama"
     model: str = "llama4"
-    fallback_provider: Literal["ollama", "groq", "gemini"] = "groq"
+    fallback_provider: Literal["ollama", "groq", "gemini", "xai"] = "groq"
     fallback_model: str = "llama-4-scout-17b-16e-instruct"
     temperature: float = Field(0.7, ge=0.0, le=1.5)
     max_tokens: int = 4096
@@ -60,6 +60,10 @@ class AppSettings(BaseSettings):
     GOOGLE_API_KEY: Optional[SecretStr] = None
     GEMINI_MODEL: str = "gemini-3-pro"
 
+    # ── xAI (Grok LLM) ───────────────────────────────────────
+    XAI_API_KEY: Optional[SecretStr] = None
+    XAI_MODEL: str = "grok-3-mini-fast"
+
     # ── Grok Imagine (optional — images are provided manually by default)
     GROK_IMAGINE_API_KEY: Optional[SecretStr] = None
     GROK_IMAGINE_ENABLED: bool = False
@@ -71,8 +75,8 @@ class AppSettings(BaseSettings):
     DATABASE_URL: str = "postgresql://svagent:changeme_in_production@localhost:5432/social_vision"
 
     # ── LLM routing ────────────────────────────────────────
-    LLM_PROVIDER: Literal["ollama", "groq", "gemini"] = "ollama"
-    LLM_FALLBACK_PROVIDER: Literal["ollama", "groq", "gemini"] = "groq"
+    LLM_PROVIDER: Literal["ollama", "groq", "gemini", "xai"] = "ollama"
+    LLM_FALLBACK_PROVIDER: Literal["ollama", "groq", "gemini", "xai"] = "groq"
 
     # ── Observability ────────────────────────────────────────
     LANGSMITH_API_KEY: Optional[SecretStr] = None

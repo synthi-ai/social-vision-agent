@@ -76,6 +76,23 @@ def get_llm(
             max_output_tokens=max_tokens,
         )
 
+    if provider == "xai":
+        from langchain_openai import ChatOpenAI
+
+        api_key = settings.XAI_API_KEY
+        if api_key is None:
+            raise ValueError("XAI_API_KEY not configured in .env")
+
+        model = settings.XAI_MODEL
+        logger.info("llm.init", provider="xai", model=model)
+        return ChatOpenAI(
+            api_key=api_key.get_secret_value(),
+            base_url="https://api.x.ai/v1",
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+
     raise ValueError(f"Unknown LLM provider: {provider}")
 
 
