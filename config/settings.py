@@ -70,6 +70,10 @@ class AppSettings(BaseSettings):
     # ── Database (PostgreSQL — checkpoints + post storage) ───
     DATABASE_URL: str = "postgresql://svagent:changeme_in_production@localhost:5432/social_vision"
 
+    # ── LLM routing ────────────────────────────────────────
+    LLM_PROVIDER: Literal["ollama", "groq", "gemini"] = "ollama"
+    LLM_FALLBACK_PROVIDER: Literal["ollama", "groq", "gemini"] = "groq"
+
     # ── Observability ────────────────────────────────────────
     LANGSMITH_API_KEY: Optional[SecretStr] = None
     LANGSMITH_PROJECT: str = "social-vision-agents-prod"
@@ -91,7 +95,9 @@ class AppSettings(BaseSettings):
     @property
     def llm(self) -> LLMConfig:
         return LLMConfig(
+            provider=self.LLM_PROVIDER,
             model=self.OLLAMA_MODEL,
+            fallback_provider=self.LLM_FALLBACK_PROVIDER,
             fallback_model=self.GROQ_FALLBACK_MODEL,
         )
 

@@ -1,0 +1,182 @@
+v2.1.39 ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting started                                                                                                                           │
+│                 Welcome back Admin!                │ Run /init to create a CLAUDE.md file with instructions for Claude                                                                                  │
+│                                                    │ ─────────────────────────────────────────────────────────────────                                                                                  │
+│                                                    │ Recent activity                                                                                                                                    │
+│                       ▐▛███▜▌                      │ No recent activity                                                                                                                                 │
+│                      ▝▜█████▛▘                     │                                                                                                                                                    │
+│                        ▘▘ ▝▝                       │                                                                                                                                                    │
+│  Opus 4.6 · Claude Pro · synthiai757@gmail.com's   │                                                                                                                                                    │
+│  Organization                                      │                                                                                                                                                    │
+│       ~/…/FarmsToMarket/social-vision-agents       │                                                                                                                                                    │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+❯ tu es un expert python , GenAi , systeme multi-agent, analyse le besoin ci-dessus et comprend le besoin
+
+⏺ Je vais d'abord explorer le projet en profondeur pour comprendre l'état actuel et le besoin.
+
+⏺ Searched for 5 patterns, read 1 file (ctrl+o to expand)
+
+⏺ Maintenant, je lis les fichiers clés du projet en parallèle.
+
+⏺ Read 11 files (ctrl+o to expand)
+  ⎿  You've hit your limit · resets 12am (Africa/Douala)
+
+✻ Cogitated for 1m 1s
+
+❯ continue
+
+⏺ Read 9 files (ctrl+o to expand)
+
+⏺ Voici mon analyse complète du projet Social Vision Agents.
+
+  ---
+  1. Le besoin métier
+
+  Automatiser de bout en bout la production hebdomadaire de contenu social media pour une startup tech (produits IA/MLOps), sur 4 plateformes (LinkedIn, X, TikTok, Facebook), avec :
+
+  - Plusieurs campagnes produit par semaine (nombre de posts dynamique)
+  - Des posts "vision/thought leadership" non liés à un produit
+  - Une recherche web en temps réel pour enrichir le contenu
+  - Une validation humaine avant publication
+  - Une persistance complète en PostgreSQL
+
+  ---
+  2. Architecture technique — ce qui est déjà construit
+
+  Pipeline LangGraph (8 nœuds séquentiels)
+
+  researcher → strategist → product_expert → writer → visual → optimizer → [INTERRUPT] human_approval → publisher
+  ┌────────────────┬──────────────────────────────────────────────────────────────────┬────────────────────────┐
+  │      Nœud      │                               Rôle                               │        Fichier         │
+  ├────────────────┼──────────────────────────────────────────────────────────────────┼────────────────────────┤
+  │ researcher     │ Recherche web (Tavily/DDG) sur les topics du brief               │ src/graph/nodes.py:78  │
+  ├────────────────┼──────────────────────────────────────────────────────────────────┼────────────────────────┤
+  │ strategist     │ Génère le calendrier éditorial (JSON) à partir du brief YAML     │ src/graph/nodes.py:114 │
+  ├────────────────┼──────────────────────────────────────────────────────────────────┼────────────────────────┤
+  │ product_expert │ Enrichit les posts produit avec des "spotlights" détaillés       │ src/graph/nodes.py:153 │
+  ├────────────────┼──────────────────────────────────────────────────────────────────┼────────────────────────┤
+  │ writer         │ Rédige le texte, hashtags, CTA pour chaque post                  │ src/graph/nodes.py:196 │
+  ├────────────────┼──────────────────────────────────────────────────────────────────┼────────────────────────┤
+  │ visual         │ Génère des prompts visuels + assigne les URLs d'images du config │ src/graph/nodes.py:236 │
+  ├────────────────┼──────────────────────────────────────────────────────────────────┼────────────────────────┤
+  │ optimizer      │ Optimise chaque draft selon les contraintes plateforme           │ src/graph/nodes.py:285 │
+  ├────────────────┼──────────────────────────────────────────────────────────────────┼────────────────────────┤
+  │ human_approval │ Exporte (Markdown + JSON), sauvegarde en PostgreSQL, pause       │ src/graph/nodes.py:323 │
+  ├────────────────┼──────────────────────────────────────────────────────────────────┼────────────────────────┤
+  │ publisher      │ Finalise, met à jour le statut, génère le rapport                │ src/graph/nodes.py:362 │
+  └────────────────┴──────────────────────────────────────────────────────────────────┴────────────────────────┘
+  State partagé (AgentState — TypedDict)
+
+  Un "whiteboard" unique (src/state.py) avec checkpoint LangGraph à chaque étape. Contient : messages, current_week, vision_summary, research_insights, calendar, product_spotlights, drafts,
+  approved_drafts, report, error.
+
+  Stack LLM avec fallback
+
+  Ollama (Llama 4 local) → Groq (cloud) → Gemini (cloud)
+
+  La factory (src/utils/llm_factory.py) fait un ping au provider primaire et bascule automatiquement sur le fallback si échec.
+
+  Configuration 100% externalisée
+  ┌──────────────────────────┬───────────────────────────────────────────────────────────┐
+  │         Fichier          │                           Rôle                            │
+  ├──────────────────────────┼───────────────────────────────────────────────────────────┤
+  │ config/settings.py       │ Pydantic Settings v2 — toutes les env vars                │
+  ├──────────────────────────┼───────────────────────────────────────────────────────────┤
+  │ config/weekly_brief.yaml │ Campagnes, images, topics de recherche, nombre de posts   │
+  ├──────────────────────────┼───────────────────────────────────────────────────────────┤
+  │ config/platforms.yaml    │ Règles par plateforme (longueur, ton, hashtags, horaires) │
+  ├──────────────────────────┼───────────────────────────────────────────────────────────┤
+  │ knowledge/products.yaml  │ Catalogue produits (features, différenciateurs, cibles)   │
+  ├──────────────────────────┼───────────────────────────────────────────────────────────┤
+  │ knowledge/vision.md      │ Vision de l'entreprise (lu par le strategist)             │
+  └──────────────────────────┴───────────────────────────────────────────────────────────┘
+  Persistance PostgreSQL
+
+  - Table weekly_batches : un row par semaine (JSONB contenant tous les posts)
+  - Table posts : chaque post individuel avec historique de statut, métriques d'engagement
+  - Driver asyncpg avec connection pooling
+  - Upsert sur (week, platform, day)
+
+  Système de Skills
+
+  7 fichiers SKILL.md dans skills/public/ (social-media-writing, viral-hooks, hashtag-strategy, visual-branding, etc.) avec frontmatter YAML. Injectés dynamiquement dans les prompts agents selon le rôle
+  (src/skills/loader.py).
+
+  API FastAPI (main.py)
+
+  - POST /run — lance un cycle complet
+  - POST /approve/{week} — reprend après l'interruption humaine
+  - GET /status/{week} — état du run
+  - GET /posts/{week} — posts stockés en PostgreSQL
+  - POST /images/upload/{week} — upload d'images manuelles
+  - GET /skills — catalogue des skills
+
+  Infrastructure Docker
+
+  4 services : ollama (GPU), postgres:16, app (FastAPI), scheduler (APScheduler, cron lundi 8h).
+
+  ---
+  3. Patterns de conception identifiés
+  ┌──────────────────────────────────────────────────────────────────────────┬───────────────────────────────┐
+  │                                 Pattern                                  │     Source d'inspiration      │
+  ├──────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
+  │ State as whiteboard (TypedDict)                                          │ DeerFlow                      │
+  ├──────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
+  │ Error recovery dans chaque nœud (try/except → state.error)               │ DeerFlow                      │
+  ├──────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
+  │ Factory-based agents avec fallback                                       │ DeerFlow                      │
+  ├──────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
+  │ Structured logging (structlog JSON)                                      │ Production best practice      │
+  ├──────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
+  │ interrupt_before pour human-in-the-loop                                  │ LangGraph natif               │
+  ├──────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
+  │ Skills = Markdown + YAML frontmatter injectés dans les prompts           │ DeerFlow / Claude Code skills │
+  ├──────────────────────────────────────────────────────────────────────────┼───────────────────────────────┤
+  │ Config-driven post count (pas de code à changer d'une semaine à l'autre) │ Design opérationnel           │
+  └──────────────────────────────────────────────────────────────────────────┴───────────────────────────────┘
+  ---
+  4. Points forts du design
+
+  1. Zéro hardcoding — tout est piloté par weekly_brief.yaml. Changer les campagnes, ajouter un produit, modifier le nombre de posts : aucune modification de code.
+  2. Images fournies, pas générées — évite la complexité et le coût de la génération d'images. Les URLs sont dans le YAML par campagne/plateforme.
+  3. Crash recovery — checkpoint LangGraph à chaque nœud + human interrupt propre (reprise avec le même thread_id).
+  4. Multi-provider LLM — pas de vendor lock-in, bascule automatique Ollama → Groq → Gemini.
+  5. Recherche web — Tavily + DuckDuckGo pour du contenu ancré dans l'actualité.
+
+  ---
+  5. Points d'attention / axes d'amélioration potentiels
+  Sujet: Checkpointer
+  Observation: MemorySaver() en dev — pas de persistance des checkpoints entre redémarrages. En prod il faudrait PostgresSaver.
+  ────────────────────────────────────────
+  Sujet: Pas de publication réelle
+  Observation: Les tokens d'API (LinkedIn, X, TikTok, Meta) sont configurés mais aucun code de publication effective n'existe dans publisher.py — le nœud ne fait qu'exporter en fichiers et sauvegarder en
+
+    BDD.
+  ────────────────────────────────────────
+  Sujet: Pas de parallélisme
+  Observation: Les 8 nœuds sont strictement séquentiels. Le writer et le visual pourraient potentiellement traiter les drafts en parallèle par plateforme.
+  ────────────────────────────────────────
+  Sujet: save_all_posts séquentiel
+  Observation: Sauvegarde post par post au lieu d'un batch INSERT — impact en performance si beaucoup de posts.
+  ────────────────────────────────────────
+  Sujet: Pas de retry LLM par nœud
+  Observation: Si un nœud échoue à parser la sortie JSON du LLM, l'erreur est loggée mais il n'y a pas de retry automatique.
+  ────────────────────────────────────────
+  Sujet: Tests
+  Observation: La structure existe (tests/unit/, tests/integration/) mais le contenu est à vérifier.
+  ---
+  6. Synthèse du besoin
+
+  Ce projet est un système multi-agents de production de contenu social media, conçu pour fonctionner en production avec :
+
+  - Un pipeline LangGraph séquentiel à 8 étapes avec checkpoint et interruption humaine
+  - Un LLM local-first (Ollama/Llama 4) avec fallback cloud (Groq, Gemini)
+  - Une configuration déclarative (YAML) qui pilote tout le comportement hebdomadaire
+  - Une persistance PostgreSQL complète
+  - Un système de skills injectables pour enrichir les capacités de chaque agent
+  - Un déploiement Docker Compose prêt pour la production
+
+  Le système génère du contenu, le soumet à validation humaine, puis le sauvegarde — mais ne publie pas encore automatiquement sur les réseaux sociaux.
+
+  Qu'est-ce que tu souhaites faire maintenant ? Corriger un problème, ajouter une fonctionnalité (publication réelle, parallélisme, retry, etc.), ou autre chose ?
