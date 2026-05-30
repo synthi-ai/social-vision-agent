@@ -31,11 +31,22 @@ services:
       timeout: 5s
       retries: 5
 
+  # Redis — caching layer
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   # Application — FastAPI + LangGraph
   app:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: ${IMAGE:-ghcr.io/hashirama21/social-vision-agents}:${IMAGE_TAG:-latest}
     ports:
       - "8000:8000"
     env_file:
@@ -43,31 +54,43 @@ services:
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
       DATABASE_URL: postgresql://svagent:changeme_in_production@postgres:5432/social_vision
+      REDIS_URL: redis://redis:6379/0
+      REDIS_ENABLED: "true"
     depends_on:
       ollama:
         condition: service_started
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ../output:/app/output
       - ../knowledge:/app/knowledge
       - ../images:/app/images
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
     command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
   # Scheduler — runs weekly pipeline automatically
   scheduler:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: ${IMAGE:-ghcr.io/hashirama21/social-vision-agents}:${IMAGE_TAG:-latest}
     env_file:
       - ../.env
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
       DATABASE_URL: postgresql://svagent:changeme_in_production@postgres:5432/social_vision
+      REDIS_URL: redis://redis:6379/0
+      REDIS_ENABLED: "true"
     depends_on:
       ollama:
         condition: service_started
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     volumes:
       - ../output:/app/output
@@ -78,3 +101,4 @@ services:
 volumes:
   ollama_data:
   pg_data:
+  redis_data:

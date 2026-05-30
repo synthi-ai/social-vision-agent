@@ -91,6 +91,7 @@ def sample_state(sample_vision, sample_calendar, sample_drafts) -> AgentState:
         product_spotlights={},
         drafts=sample_drafts,
         approved_drafts=[],
+        posting_results={},
         report=None,
         error=None,
     )
